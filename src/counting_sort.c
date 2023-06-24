@@ -1,18 +1,29 @@
 #include "../include/counting_sort.h"
 
-void counting_sort(FILE *file_ptr, int64_t min, int64_t max) {
-    uint64_t range = max - min;
-    uint8_t *counting_array;
-    counting_array = calloc(range, sizeof(uint8_t));
+uint8_t *init_sort_array(FILE *file_ptr, int64_t min, int64_t max, uint64_t range) {
+    uint8_t *sort_array;
+    sort_array = calloc(range, sizeof(uint8_t));
     char line[MAX_LINE_LEN];
     while (fgets(line, MAX_LINE_LEN, file_ptr) != NULL) {
         int64_t num = atoll(line);
-        if (min <= num && num <= max) {
-            counting_array[max - num]++;
-        }
+        if (min <= num && num <= max)
+            sort_array[max - num]++;
     }
-    for (int i = 0; i < range; i++)
-        for (int j = 0; j < counting_array[i]; j++)
+    return sort_array;
+}
+
+void print_sorted_array(const uint8_t *sort_array, int64_t max, uint64_t range) {
+    for (int i = 0; i < range; i++) {
+        for (int j = 0; j < sort_array[i]; j++)
             printf("%lld\n", max - i);
-    free(counting_array);
+    }
+}
+
+void create_sorted_txt_file(const uint8_t *sort_array, int64_t max, uint64_t range) {
+    FILE *output_file = fopen(OUTPUT_FILE_PATH, "w");
+    for (int i = 0; i < range; i++) {
+        for (int j = 0; j < sort_array[i]; j++)
+            fprintf(output_file, "%lld\n", max - i);
+    }
+    fclose(output_file);
 }

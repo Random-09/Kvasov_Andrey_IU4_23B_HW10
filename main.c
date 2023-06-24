@@ -20,5 +20,9 @@ int main(int argc, char **argv) {
         puts("Lower limit of the range is greater than the upper!");
         exit(EXIT_FAILURE);
     }
-    counting_sort(file_ptr, min, max);
+    uint64_t range = max - min;
+    uint8_t *sort_array = init_sort_array(file_ptr, min, max, range);
+    print_sorted_array(sort_array, max, range);
+    create_sorted_txt_file(sort_array, max, range);
+    free(sort_array);
 }
